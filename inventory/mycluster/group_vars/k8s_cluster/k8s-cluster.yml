@@ -1,4 +1,6 @@
 ---
+kube_proxy_remove: true
+
 # Kubernetes configuration dirs and system namespace.
 # Those are where all the additional config stuff goes
 # the kubernetes normally puts in /srv/kubernetes.
@@ -15,6 +17,22 @@ kube_cert_dir: "{{ kube_config_dir }}/ssl"
 kube_token_dir: "{{ kube_config_dir }}/tokens"
 
 kube_api_anonymous_auth: true
+
+#kube_version: v1.36.0
+helm_enabled: true
+
+kube_vip_enabled: true
+kube_vip_controlplane_enabled: true
+kube_vip_arp_enabled: true
+
+kube_vip_address: 10.10.0.100
+kube_vip_interface: eth1
+
+apiserver_loadbalancer_domain_name: "10.10.0.100"
+
+loadbalancer_apiserver:
+  address: 10.10.0.100
+  port: 6443
 
 # Where the binaries will be downloaded.
 # Note: ensure that you've enough disk space (about 1G)

@@ -1,4 +1,10 @@
 ---
+cilium_enable_hubble: true
+cilium_kube_proxy_replacement: true
+cilium_operator_replicas: 1
+cilium_enable_prometheus: true
+cilium_enable_service_topology: true
+
 # Helm deployment
 helm_enabled: false
 
