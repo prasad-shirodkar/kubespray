@@ -1,0 +1,74 @@
+---
+# ClusterDOS install manifest — apply this to bootstrap ArgoCD management
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: clusterdos
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    name: in-cluster
+    namespace: argocd
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      allowEmpty: true
+      selfHeal: true
+    syncOptions:
+      - RespectIgnoreDifferences=true
+      - CreateNamespace=true
+      - PruneLast=true
+      - ApplyOutOfSyncOnly=true
+        # server-side apply by default
+      - ServerSideApply=true
+  source:
+    repoURL: 'https://gitlab.com/aranya-tech/public/clusterdOS.git'
+    path: metadeployment/
+    targetRevision: v0.3.20
+    helm:
+      valuesObject:
+        clusterdos:
+          clustername: null # REQUIRED
+          ref: v0.3.20
+        gitapps:
+          certmanager:
+            enabled: true
+          crossplane:
+            enabled: false
+            # values:
+            #   provider:
+              # doc.crds.dev/github.com/crossplane-contrib/provider-upjet-digitalocean
+              # https://github.com/crossplane-contrib/provider-upjet-digitalocean
+              #   packages:
+              #     - crossplane-contrib/provider-upjet-digitalocean:v0.2.1
+          ksm:
+            enabled: true
+          lgtm:
+            enabled: false
+          metricsserver:
+            enabled: false
+          nfd:
+            enabled: true
+          nvidiagpuoperator:
+            enabled: false
+          rook:
+            enabled: false
+          wekafs:
+            enabled: false
+          tailscale:
+            # https://tailscale.com/kb/1236/kubernetes-operator
+            # requires a secret, see secrets dir for an example
+            enabled: false
+          traefik:
+            enabled: false
+          inference:
+            # llm-d prefix cache-aware inference routing
+            # defaults work on single-GPU (MicroK8s, DOKS, etc.)
+            enabled: false
+          slurm:
+            # Slurm HPC cluster via Slinky operator
+            # Requires cert-manager for operator webhooks
+            enabled: false
